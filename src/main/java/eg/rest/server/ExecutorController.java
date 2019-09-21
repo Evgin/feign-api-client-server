@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.PostConstruct;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
 @XSlf4j
 @RestController
@@ -28,12 +30,22 @@ public class ExecutorController {
                 .target(TargetClient.class, "http://localhost:8080/");
     }
 
-    @GetMapping("/exec/{one}/{two}")
-    public ResponseEntity<Integer> sum(@PathVariable("one") Integer one,
+    @GetMapping("/multiple/{one}/{two}")
+    public ResponseEntity<Integer> exec(@PathVariable("one") Integer one,
+                                        @PathVariable("two") Integer two) throws ExecutionException, InterruptedException {
+        log.entry(one, two);
+
+        CompletableFuture<Integer> first = CompletableFuture.supplyAsync(() -> targetClient.sum(one, two));
+        CompletableFuture<Integer> second = CompletableFuture.supplyAsync(() -> targetClient.sum(one, two));
+
+        return ResponseEntity.ok(first.get() + second.get());
+    }
+
+    @GetMapping("/single/{one}/{two}")
+    public ResponseEntity<Integer> run(@PathVariable("one") Integer one,
                                        @PathVariable("two") Integer two) {
         log.entry(one, two);
-        Integer sum = targetClient.sun(one, two);
-        log.exit(sum);
-        return ResponseEntity.ok(sum);
+
+        return ResponseEntity.ok(targetClient.sum(one, two) + targetClient.sum(one, two));
     }
 }
