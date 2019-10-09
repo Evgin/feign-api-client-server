@@ -6,27 +6,10 @@
 # * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
 # * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
 
-GET http://localhost:8080/multiple/1/2
+GET http://localhost:8080/weather
 
 ###
 
-GET http://localhost:8080/single/1/2
+GET http://localhost:8080/test?ex=false
 
 ###
-
-GET http://localhost:8080/pub-stream
-
-###
-
-GET http://localhost:8080/test/person?name=Helena&age=18
-
-###
-
-POST http://localhost:8080/test/person/exec
-
-###
-
-POST http://localhost:8080/test/person/exec
-
-###
-
